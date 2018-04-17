@@ -4,6 +4,8 @@ import { Jiro } from 'react-native-textinput-effects';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
+import { TOKEN } from '../utils/constants';
+
 const defState = {
   values: {
     email: '',
@@ -24,7 +26,7 @@ class Login extends Component {
     const { payload, error } = response.data.login;
 
     if (payload) {
-      await AsyncStorage.setItem('@token', payload.token);
+      await AsyncStorage.setItem(TOKEN, payload.token);
 
       this.props.history.push('/products');
     } else {
@@ -81,6 +83,14 @@ class Login extends Component {
             color="#841584"
             accessibilityLabel="Login"
             onPress={this.onBtnPress}
+          />
+        </View>
+        <View>
+          <Button
+            title="Create account"
+            color="#841584"
+            accessibilityLabel="Signup"
+            onPress={() => this.props.history.push('/signup')}
           />
         </View>
       </View>

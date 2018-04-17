@@ -4,6 +4,8 @@ import { Jiro } from 'react-native-textinput-effects';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
+import { TOKEN } from '../utils/constants';
+
 const defState = {
   values: {
     name: '',
@@ -22,7 +24,7 @@ class Signup extends Component {
         variables: this.state.values
       });
 
-      await AsyncStorage.setItem('@token', response.data.signup.token);
+      await AsyncStorage.setItem(TOKEN, response.data.signup.token);
 
       this.props.history.push('/products');
     } catch (error) {
@@ -42,10 +44,6 @@ class Signup extends Component {
         [key]: value
       }
     }));
-  };
-
-  onLoginPress = () => {
-    this.props.history.push('/login');
   };
 
   render() {
@@ -100,7 +98,7 @@ class Signup extends Component {
             title="Login"
             color="#841584"
             accessibilityLabel="Signup"
-            onPress={this.onLoginPress}
+            onPress={() => this.props.history.push('/login')}
           />
         </View>
       </View>
