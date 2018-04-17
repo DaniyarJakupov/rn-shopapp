@@ -10,14 +10,19 @@ class CheckToken extends Component {
     const token = await AsyncStorage.getItem(TOKEN);
 
     if (token) {
-      const response = await this.props.mutate({
-        variables: {
-          token
-        }
-      });
-      await AsyncStorage.setItem(TOKEN, response.data.refreshToken);
+      try {
+        const response = await this.props.mutate({
+          variables: {
+            token
+          }
+        });
+        await AsyncStorage.setItem(TOKEN, response.data.refreshToken);
 
-      this.props.history.push('/products');
+        this.props.history.push('/products');
+      } catch (error) {
+        console.log(error);
+        this.props.history.push('/login');
+      }
     } else {
       this.props.history.push('/login');
     }
