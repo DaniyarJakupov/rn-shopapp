@@ -4,6 +4,7 @@ import { Jiro } from 'react-native-textinput-effects';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import ImagePicker from 'react-native-image-picker';
+import { ReactNativeFile } from 'apollo-upload-client';
 
 class NewProduct extends Component {
   state = {
@@ -14,7 +15,37 @@ class NewProduct extends Component {
     }
   };
 
-  onBtnPress = async () => {};
+  componentDidMount() {
+    console.log('====================================');
+    console.log(this.props);
+    console.log('====================================');
+  }
+
+  onBtnPress = async () => {
+    const { name, price, pictureUrl } = this.state.values;
+    const picture = new ReactNativeFile({
+      uri: pictureUrl,
+      type: 'image/jpg',
+      name
+    });
+
+    try {
+      const response = await this.props.mutate({
+        variables: {
+          name,
+          price,
+          picture
+        }
+      });
+      console.log('====================================');
+      console.log('RESPONSE', response);
+      console.log('====================================');
+    } catch (error) {
+      console.log('====================================');
+      console.log('ERROR', error);
+      console.log('====================================');
+    }
+  };
 
   onChangeText = (key, value) => {
     this.setState(prevState => ({
@@ -50,8 +81,8 @@ class NewProduct extends Component {
 
         this.setState({
           values: {
-            pictureUrl: response.uri,
-            source
+            ...this.state.values,
+            pictureUrl: response.uri
           }
         });
         console.log(this.state.values);
@@ -121,4 +152,13 @@ class NewProduct extends Component {
   }
 }
 
-export default NewProduct;
+const createProduct = gql`
+  mutation($name: String!, $price: Float!, $picture: Upload!) {
+    createProduct(name: $name, price: $price, picture: $picture) {
+      id
+      name
+    }
+  }
+`;
+
+export default graphql(createProduct)(NewProduct);
