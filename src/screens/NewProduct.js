@@ -5,6 +5,7 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import ImagePicker from 'react-native-image-picker';
 import { ReactNativeFile } from 'apollo-upload-client';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 class NewProduct extends Component {
   state = {
@@ -14,12 +15,6 @@ class NewProduct extends Component {
       pictureUrl: null
     }
   };
-
-  componentDidMount() {
-    console.log('====================================');
-    console.log(this.props);
-    console.log('====================================');
-  }
 
   onBtnPress = async () => {
     const { name, price, pictureUrl } = this.state.values;
@@ -37,14 +32,14 @@ class NewProduct extends Component {
           picture
         }
       });
-      console.log('====================================');
+
       console.log('RESPONSE', response);
-      console.log('====================================');
     } catch (error) {
-      console.log('====================================');
       console.log('ERROR', error);
-      console.log('====================================');
+      return;
     }
+
+    this.props.history.push('/products');
   };
 
   onChangeText = (key, value) => {
@@ -97,6 +92,13 @@ class NewProduct extends Component {
 
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <TouchableOpacity
+          style={{ position: 'absolute', top: 20, left: 10 }}
+          onPress={() => this.props.history.push('/products')}
+        >
+          <Ionicons name="md-arrow-back" size={40} />
+        </TouchableOpacity>
+
         <View style={{ width: '80%', marginBottom: 15 }}>
           <Jiro
             label={'name'}
