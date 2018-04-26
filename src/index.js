@@ -1,15 +1,18 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import { ApolloProvider } from 'react-apollo';
+import { Provider } from 'react-redux';
 
 import Routes from './navigation';
 import client from './graphql';
+import { store } from './redux/store';
 
 const App = () => {
   return (
-    <ApolloProvider client={client}>
-      <Routes />
-    </ApolloProvider>
+    <Provider store={store}>
+      <ApolloProvider client={client}>
+        <Routes />
+      </ApolloProvider>
+    </Provider>
   );
 };
 
