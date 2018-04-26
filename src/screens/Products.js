@@ -12,9 +12,11 @@ import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import gql from 'graphql-tag';
 import { graphql, compose, withApollo } from 'react-apollo';
+import { connect } from 'react-redux';
 
 import ProductCard from '../components/ProductCard';
 import { TOKEN } from '../utils/constants';
+import { addUser } from '../redux/actions'; // redux action
 
 class Products extends Component {
   state = {
@@ -25,9 +27,8 @@ class Products extends Component {
     const {
       data: { me }
     } = await this.props.client.query({ query: meQuery });
-    console.log('====================================');
-    console.log(me);
-    console.log('====================================');
+
+    this.props.addUser(me);
   }
 
   logout = async () => {
@@ -109,8 +110,9 @@ const meQuery = gql`
     me {
       name
       id
+      email
     }
   }
 `;
 
-export default withApollo(compose(graphql(productsQuery))(Products));
+export default withApollo(compose(graphql(productsQuery), connect(null, { addUser }))(Products));
