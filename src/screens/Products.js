@@ -1,17 +1,37 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, ActivityIndicator, FlatList, RefreshControl } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  AsyncStorage
+} from 'react-native';
 import { iOSColors } from 'react-native-typography';
-
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
+import { graphql, compose, withApollo } from 'react-apollo';
 
 import ProductCard from '../components/ProductCard';
+import { TOKEN } from '../utils/constants';
 
 class Products extends Component {
   state = {
     isRefreshing: false
+  };
+
+  async componentDidMount() {
+    const {
+      data: { me }
+    } = await this.props.client.query({ query: meQuery });
+    console.log('====================================');
+    console.log(me);
+    console.log('====================================');
+  }
+
+  logout = async () => {
+    await AsyncStorage.removeItem(TOKEN);
   };
 
   refreshRequest = async () => {
@@ -53,7 +73,10 @@ class Products extends Component {
             title="New Product"
             onPress={() => this.props.history.push('/new-product')}
           >
-            <Icon name="md-create" style={styles.actionButtonIcon} />
+            <Icon name="md-create" style={styles.actionButtonIcon} size={22} />
+          </ActionButton.Item>
+          <ActionButton.Item buttonColor="#3498db" title="Logout" onPress={this.logout}>
+            <Icon name="ios-log-out" style={styles.actionButtonIcon} size={22} />
           </ActionButton.Item>
         </ActionButton>
       </View>
@@ -81,4 +104,13 @@ export const productsQuery = gql`
   }
 `;
 
-export default graphql(productsQuery)(Products);
+const meQuery = gql`
+  {
+    me {
+      name
+      id
+    }
+  }
+`;
+
+export default withApollo(compose(graphql(productsQuery))(Products));
