@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     backgroundColor: '#fff',
-    marginBottom: 10
+    marginTop: 10
   },
   sellerWrapper: {
     flex: 0.1,
