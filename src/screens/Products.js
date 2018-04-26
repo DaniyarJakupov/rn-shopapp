@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const productsQuery = gql`
+export const productsQuery = gql`
   {
     products {
       name

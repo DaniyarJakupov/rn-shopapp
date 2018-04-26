@@ -7,6 +7,8 @@ import ImagePicker from 'react-native-image-picker';
 import { ReactNativeFile } from 'apollo-upload-client';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import { productsQuery } from './Products';
+
 class NewProduct extends Component {
   state = {
     values: {
@@ -27,10 +29,14 @@ class NewProduct extends Component {
 
     try {
       const response = await this.props.mutate({
-        variables: {
-          name,
-          price,
-          picture
+        variables: { name, price, picture },
+        update: (store, { data: { createProduct } }) => {
+          // Read the data from our cache for this query.
+          const data = store.readQuery({ query: productsQuery });
+          // Add our product from the mutation to the end.
+          data.products.push(createProduct);
+          // Write our data back to the cache.
+          store.writeQuery({ query: productsQuery, data });
         }
       });
 
@@ -155,8 +161,11 @@ class NewProduct extends Component {
 const createProduct = gql`
   mutation($name: String!, $price: Float!, $picture: Upload!) {
     createProduct(name: $name, price: $price, picture: $picture) {
-      id
+      __typename
       name
+      pictureUrl
+      id
+      price
     }
   }
 `;
