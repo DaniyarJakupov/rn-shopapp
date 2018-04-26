@@ -13,7 +13,8 @@ class NewProduct extends Component {
       name: '',
       price: '',
       pictureUrl: null
-    }
+    },
+    isReady: false
   };
 
   onBtnPress = async () => {
@@ -69,25 +70,21 @@ class NewProduct extends Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        //let source = { uri: response.uri };
-
-        // You can also display the image using data:
-        let source = { uri: `data:image/jpeg;base64,${response.data}` };
-
         this.setState({
           values: {
             ...this.state.values,
             pictureUrl: response.uri
-          }
+          },
+          isReady: true
         });
-        console.log(this.state.values);
       }
     });
   };
 
   render() {
     const {
-      values: { name, pictureUrl, price }
+      values: { name, pictureUrl, price },
+      isReady
     } = this.state;
 
     return (
@@ -147,6 +144,7 @@ class NewProduct extends Component {
             color="#841584"
             accessibilityLabel="Add Product"
             onPress={this.onBtnPress}
+            disabled={!isReady}
           />
         </View>
       </View>
