@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, FlatList, RefreshControl } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, FlatList, RefreshControl } from 'react-native';
 import { iOSColors } from 'react-native-typography';
+
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
+
+import ProductCard from '../components/ProductCard';
 
 class Products extends Component {
   state = {
@@ -17,7 +20,7 @@ class Products extends Component {
     this.setState({ isRefreshing: false });
   };
 
-  renderItem = ({ item }) => <Text {...item}> {item.name} </Text>;
+  renderItem = ({ item }) => <ProductCard {...item} />;
 
   render() {
     const {
@@ -61,7 +64,9 @@ class Products extends Component {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: iOSColors.customGray
+    alignItems: 'center',
+    marginTop: 30,
+    backgroundColor: iOSColors.lightGray
   }
 });
 
