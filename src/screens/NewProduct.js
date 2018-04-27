@@ -5,7 +5,6 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import ImagePicker from 'react-native-image-picker';
 import { ReactNativeFile } from 'apollo-upload-client';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { productsQuery } from './Products';
 
@@ -159,6 +158,9 @@ const createProduct = gql`
       pictureUrl
       id
       price
+      seller {
+        id
+      }
     }
   }
 `;
