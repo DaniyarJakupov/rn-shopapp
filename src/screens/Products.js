@@ -33,6 +33,7 @@ class Products extends Component {
 
   logout = async () => {
     await AsyncStorage.removeItem(TOKEN);
+    this.props.history.push('/');
   };
 
   refreshRequest = async () => {
