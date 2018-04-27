@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { ActivityIndicator, AsyncStorage, View } from 'react-native';
-import { graphql } from 'react-apollo';
+import { graphql, compose, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
+import { connect } from 'react-redux';
 
 import { TOKEN } from '../utils/constants';
+import { addUser } from '../redux/actions'; // redux action
 
 class AuthLoading extends Component {
   componentDidMount = async () => {
@@ -18,7 +20,7 @@ class AuthLoading extends Component {
         });
         await AsyncStorage.setItem(TOKEN, response.data.refreshToken);
 
-        this.props.navigation.navigate(token ? 'App' : 'Auth');
+        //this.props.navigation.navigate(token ? 'App' : 'Auth');
       } catch (error) {
         console.log(error);
         this.props.navigation.navigate('Auth');
@@ -27,6 +29,19 @@ class AuthLoading extends Component {
       this.props.navigation.navigate('Auth');
     }
   };
+
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.data.loading) {
+      // console.log(nextProps.data.me);
+      this.props.addUser(nextProps.data.me);
+      this.props.navigation.navigate('App');
+    } else {
+      this.props.addUser({
+        user: "User's information wasn't fetch"
+      });
+      this.props.navigation.navigate('App');
+    }
+  }
 
   render() {
     return (
@@ -43,4 +58,16 @@ const refreshTokenMutation = gql`
   }
 `;
 
-export default graphql(refreshTokenMutation)(AuthLoading);
+const meQuery = gql`
+  {
+    me {
+      name
+      id
+      email
+    }
+  }
+`;
+
+export default compose(graphql(meQuery), graphql(refreshTokenMutation), connect(null, { addUser }))(
+  AuthLoading
+);

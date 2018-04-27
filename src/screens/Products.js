@@ -23,13 +23,12 @@ class Products extends Component {
     isRefreshing: false
   };
 
-  async componentDidMount() {
-    const {
-      data: { me }
-    } = await this.props.client.query({ query: meQuery });
-
-    this.props.addUser(me);
-  }
+  // async componentDidMount() {
+  //   const {
+  //     data: { me }
+  //   } = await this.props.client.query({ query: meQuery });
+  //   this.props.addUser(me);
+  // }
 
   logout = async () => {
     await AsyncStorage.removeItem(TOKEN);
@@ -52,7 +51,7 @@ class Products extends Component {
     if (loading) {
       return (
         <View style={{ flex: 1, justifyContent: 'center' }}>
-          <ActivityIndicator color="red" size="large" />
+          <ActivityIndicator color="lightblue" size="large" />
         </View>
       );
     }
@@ -105,14 +104,14 @@ export const productsQuery = gql`
   }
 `;
 
-const meQuery = gql`
-  {
-    me {
-      name
-      id
-      email
-    }
-  }
-`;
+// const meQuery = gql`
+//   {
+//     me {
+//       name
+//       id
+//       email
+//     }
+//   }
+// `;
 
 export default withApollo(compose(graphql(productsQuery), connect(null, { addUser }))(Products));
