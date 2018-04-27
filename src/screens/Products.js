@@ -33,7 +33,7 @@ class Products extends Component {
 
   logout = async () => {
     await AsyncStorage.removeItem(TOKEN);
-    this.props.history.push('/');
+    this.props.navigation.navigate('Auth');
   };
 
   refreshRequest = async () => {
@@ -73,7 +73,7 @@ class Products extends Component {
           <ActionButton.Item
             buttonColor="#9b59b6"
             title="New Product"
-            onPress={() => this.props.history.push('/new-product')}
+            onPress={() => this.props.navigation.navigate('NewProduct')}
           >
             <Icon name="md-create" style={styles.actionButtonIcon} size={22} />
           </ActionButton.Item>
@@ -90,7 +90,6 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     alignItems: 'center',
-    marginTop: 30,
     backgroundColor: iOSColors.lightGray
   }
 });

@@ -26,7 +26,7 @@ class Signup extends Component {
 
       await AsyncStorage.setItem(TOKEN, response.data.signup.token);
 
-      this.props.history.push('/products');
+      this.props.navigation.navigate('App');
     } catch (error) {
       this.setState({
         errors: {
@@ -98,7 +98,7 @@ class Signup extends Component {
             title="Login"
             color="#841584"
             accessibilityLabel="Signup"
-            onPress={() => this.props.history.push('/login')}
+            onPress={() => this.props.navigation.goBack(null)}
           />
         </View>
       </View>

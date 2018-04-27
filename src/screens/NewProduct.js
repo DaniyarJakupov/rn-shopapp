@@ -46,7 +46,7 @@ class NewProduct extends Component {
       return;
     }
 
-    this.props.history.push('/products');
+    this.props.navigation.navigate('Products');
   };
 
   onChangeText = (key, value) => {
@@ -95,13 +95,6 @@ class NewProduct extends Component {
 
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <TouchableOpacity
-          style={{ position: 'absolute', top: 20, left: 10 }}
-          onPress={() => this.props.history.push('/products')}
-        >
-          <Ionicons name="md-arrow-back" size={40} />
-        </TouchableOpacity>
-
         <View style={{ width: '80%', marginBottom: 15 }}>
           <Jiro
             label={'name'}

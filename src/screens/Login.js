@@ -28,7 +28,7 @@ class Login extends Component {
     if (payload) {
       await AsyncStorage.setItem(TOKEN, payload.token);
 
-      this.props.history.push('/products');
+      this.props.navigation.navigate('App');
     } else {
       this.setState({
         errors: {
@@ -90,7 +90,7 @@ class Login extends Component {
             title="Create account"
             color="#841584"
             accessibilityLabel="Signup"
-            onPress={() => this.props.history.push('/signup')}
+            onPress={() => this.props.navigation.navigate('Signup')}
           />
         </View>
       </View>
