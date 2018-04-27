@@ -88,8 +88,7 @@ class Products extends Component {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: iOSColors.lightGray
+    alignItems: 'center'
   }
 });
 
