@@ -7,7 +7,6 @@ import {
   RefreshControl,
   AsyncStorage
 } from 'react-native';
-import { iOSColors } from 'react-native-typography';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import gql from 'graphql-tag';
@@ -16,19 +15,11 @@ import { connect } from 'react-redux';
 
 import ProductCard from '../components/ProductCard';
 import { TOKEN } from '../utils/constants';
-import { addUser } from '../redux/actions'; // redux action
 
 class Products extends Component {
   state = {
     isRefreshing: false
   };
-
-  // async componentDidMount() {
-  //   const {
-  //     data: { me }
-  //   } = await this.props.client.query({ query: meQuery });
-  //   this.props.addUser(me);
-  // }
 
   logout = async () => {
     await AsyncStorage.removeItem(TOKEN);
@@ -99,18 +90,15 @@ export const productsQuery = gql`
       pictureUrl
       id
       price
+      seller {
+        id
+      }
     }
   }
 `;
 
-// const meQuery = gql`
-//   {
-//     me {
-//       name
-//       id
-//       email
-//     }
-//   }
-// `;
+const mapStateToProps = state => ({
+  user: state.user
+});
 
-export default withApollo(compose(graphql(productsQuery), connect(null, { addUser }))(Products));
+export default withApollo(compose(graphql(productsQuery), connect(mapStateToProps))(Products));
