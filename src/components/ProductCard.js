@@ -1,23 +1,33 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet, Dimensions } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { connect } from 'react-redux';
 
 const { width, height } = Dimensions.get('window');
 
-const ProductCard = ({ name, pictureUrl, price }) => (
-  <View style={styles.root}>
-    <View style={styles.sellerWrapper}>
-      <Text style={styles.seller}>Seller</Text>
-    </View>
-    <View style={styles.imageWrapper}>
-      <Image source={{ uri: `http://localhost:4000/${pictureUrl}` }} style={styles.image} />
-    </View>
+const ProductCard = ({ name, pictureUrl, price, seller, user }) => {
+  return (
+    <View style={styles.root}>
+      <View style={styles.header}>
+        <Text style={styles.seller}>{seller.name}</Text>
+        {seller.id == user.id && (
+          <View style={styles.headerIcons}>
+            <Icon name="md-create" size={20} />
+            <Icon name="md-trash" size={20} />
+          </View>
+        )}
+      </View>
+      <View style={styles.imageWrapper}>
+        <Image source={{ uri: `http://localhost:4000/${pictureUrl}` }} style={styles.image} />
+      </View>
 
-    <View style={styles.textWrapper}>
-      <Text style={styles.price}>${price}</Text>
-      <Text style={styles.name}>{name.toUpperCase()}</Text>
+      <View style={styles.textWrapper}>
+        <Text style={styles.price}>${price}</Text>
+        <Text style={styles.name}>{name.toUpperCase()}</Text>
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 const styles = StyleSheet.create({
   root: {
@@ -28,14 +38,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginBottom: 10
   },
-  sellerWrapper: {
+  header: {
     flex: 0.1,
     marginLeft: 10,
-    justifyContent: 'center'
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row'
   },
   seller: {
     fontWeight: 'bold',
     fontSize: 16
+  },
+  headerIcons: {
+    flexDirection: 'row',
+    width: 60,
+    marginLeft: 15,
+    alignItems: 'center',
+    justifyContent: 'space-around'
   },
   imageWrapper: {
     flex: 0.75
@@ -55,4 +74,9 @@ const styles = StyleSheet.create({
     marginBottom: 5
   }
 });
-export default ProductCard;
+
+const mapStateToProps = state => ({
+  user: state.user
+});
+
+export default connect(mapStateToProps)(ProductCard);

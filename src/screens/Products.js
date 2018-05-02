@@ -92,6 +92,7 @@ export const productsQuery = gql`
       price
       seller {
         id
+        name
       }
     }
   }
