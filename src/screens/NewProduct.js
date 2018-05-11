@@ -27,7 +27,7 @@ class NewProduct extends Component {
     });
 
     try {
-      const response = await this.props.mutate({
+      await this.props.mutate({
         variables: { name, price, picture },
         update: (store, { data: { createProduct } }) => {
           // Read the data from our cache for this query.
@@ -38,14 +38,12 @@ class NewProduct extends Component {
           store.writeQuery({ query: productsQuery, data });
         }
       });
-
-      console.log('RESPONSE', response);
     } catch (error) {
       console.log('ERROR', error);
       return;
     }
 
-    this.props.navigation.navigate('Products');
+    this.props.navigation.goBack(null);
   };
 
   onChangeText = (key, value) => {
@@ -153,7 +151,6 @@ class NewProduct extends Component {
 const createProduct = gql`
   mutation($name: String!, $price: Float!, $picture: Upload!) {
     createProduct(name: $name, price: $price, picture: $picture) {
-      __typename
       name
       pictureUrl
       id
