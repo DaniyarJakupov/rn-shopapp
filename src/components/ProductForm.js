@@ -13,6 +13,20 @@ class ProductForm extends Component {
     isReady: false
   };
 
+  componentDidMount() {
+    if (this.props.details) {
+      const { name, price, pictureUrl } = this.props.details;
+      this.setState(prevState => ({
+        values: {
+          ...prevState.values,
+          name,
+          price: price.toString(),
+          pictureUrl: `http://localhost:4000/${pictureUrl}`
+        }
+      }));
+    }
+  }
+
   onSubmitPress = () => {
     this.props.submit(this.state.values);
   };
