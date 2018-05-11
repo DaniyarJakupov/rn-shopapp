@@ -8,6 +8,7 @@ import SignupScreen from '../screens/Signup';
 import ProductsScreen from '../screens/Products';
 import NewProductScreen from '../screens/NewProduct';
 import ProfileScreen from '../screens/Profile';
+import EditProductScreen from '../screens/EditProduct';
 
 import { colors } from '../utils/colors';
 
@@ -56,6 +57,9 @@ const AppStack = StackNavigator(
     },
     NewProduct: {
       screen: NewProductScreen
+    },
+    EditProduct: {
+      screen: EditProductScreen
     }
   },
   {
