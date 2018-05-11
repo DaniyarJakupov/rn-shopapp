@@ -2,18 +2,34 @@ import React from 'react';
 import { View, Image, Text, StyleSheet, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { connect } from 'react-redux';
+import gql from 'graphql-tag';
+import { graphql, compose } from 'react-apollo';
+import { productsQuery } from '../screens/Products';
 
 const { width, height } = Dimensions.get('window');
 
-const ProductCard = ({ name, pictureUrl, price, seller, user }) => {
+const ProductCard = ({ name, pictureUrl, price, seller, user, id, mutate }) => {
   return (
     <View style={styles.root}>
       <View style={styles.header}>
         <Text style={styles.seller}>{seller.name}</Text>
-        {seller.id == user.id && (
+        {seller.id === user.id && (
           <View style={styles.headerIcons}>
             <Icon name="md-create" size={20} />
-            <Icon name="md-trash" size={20} />
+            <Icon
+              name="md-trash"
+              size={20}
+              onPress={() => {
+                return mutate({
+                  variables: { id },
+                  update: store => {
+                    const data = store.readQuery({ query: productsQuery });
+                    data.products = data.products.filter(prod => prod.id !== id);
+                    store.writeQuery({ query: productsQuery, data });
+                  }
+                });
+              }}
+            />
           </View>
         )}
       </View>
@@ -79,4 +95,12 @@ const mapStateToProps = state => ({
   user: state.user
 });
 
-export default connect(mapStateToProps)(ProductCard);
+const deleteProductMutation = gql`
+  mutation($id: ID!) {
+    deleteProduct(where: { id: $id }) {
+      id
+    }
+  }
+`;
+
+export default compose(graphql(deleteProductMutation), connect(mapStateToProps))(ProductCard);
