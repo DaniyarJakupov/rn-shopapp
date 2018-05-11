@@ -8,14 +8,20 @@ import { productsQuery } from '../screens/Products';
 
 const { width, height } = Dimensions.get('window');
 
-const ProductCard = ({ name, pictureUrl, price, seller, user, id, mutate }) => {
+const ProductCard = ({ name, pictureUrl, price, seller, user, id, mutate, navigation }) => {
   return (
     <View style={styles.root}>
       <View style={styles.header}>
         <Text style={styles.seller}>{seller.name}</Text>
         {seller.id === user.id && (
           <View style={styles.headerIcons}>
-            <Icon name="md-create" size={20} />
+            <Icon
+              name="md-create"
+              size={20}
+              onPress={() =>
+                navigation.navigate('EditProduct', { details: { name, price, id, pictureUrl } })
+              }
+            />
             <Icon
               name="md-trash"
               size={20}
