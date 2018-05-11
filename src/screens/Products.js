@@ -32,7 +32,7 @@ class Products extends Component {
     this.setState({ isRefreshing: false });
   };
 
-  renderItem = ({ item }) => <ProductCard {...item} />;
+  renderItem = ({ item }) => <ProductCard {...item} navigation={this.props.navigation} />;
 
   render() {
     const {
