@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
-import { View, Button, Text, TouchableOpacity, Image } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView
+} from 'react-native';
 import { Jiro } from 'react-native-textinput-effects';
 import ImagePicker from 'react-native-image-picker';
 
@@ -22,7 +31,8 @@ class ProductForm extends Component {
           name,
           price: price.toString(),
           pictureUrl: `http://localhost:4000/${pictureUrl}`
-        }
+        },
+        isReady: true
       }));
     }
   }
@@ -74,63 +84,112 @@ class ProductForm extends Component {
       values: { name, pictureUrl, price },
       isReady
     } = this.state;
+    let disabledBtn = {};
+    !isReady ? (disabledBtn = { backgroundColor: 'lightgrey', shadowColor: 'grey' }) : {};
 
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <View style={{ width: '80%', marginBottom: 15 }}>
-          <Jiro
-            label={'name'}
-            borderColor={'#9b537a'}
-            inputStyle={{ color: 'white' }}
-            value={name}
-            onChangeText={value => this.onChangeText('name', value)}
-            autoCapitalize={'none'}
-          />
-
-          <Jiro
-            label={'price'}
-            borderColor={'#9b537a'}
-            inputStyle={{ color: 'white' }}
-            value={price}
-            keyboardType="numeric"
-            onChangeText={value => this.onChangeText('price', value)}
-            autoCapitalize={'none'}
-          />
-
-          <View style={{ alignSelf: 'center', margin: 20 }}>
-            {pictureUrl && (
-              <Image source={{ uri: pictureUrl }} style={{ width: 200, height: 200 }} />
-            )}
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View style={styles.root}>
+          <View style={styles.formWrapper}>
+            <View style={styles.pictureWrapper}>
+              {pictureUrl ? (
+                <TouchableOpacity onPress={this.selectPhotoTapped}>
+                  <Image source={{ uri: pictureUrl }} style={styles.pic} />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={this.selectPhotoTapped} style={styles.placeholder}>
+                  <Text>Select a Photo</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+            <KeyboardAvoidingView behavior="padding" enabled>
+              <View style={styles.inputsWrapper}>
+                <View style={styles.input}>
+                  <Jiro
+                    label={'name'}
+                    borderColor={'#9b537a'}
+                    inputStyle={{ color: 'white' }}
+                    value={name}
+                    onChangeText={value => this.onChangeText('name', value)}
+                    autoCapitalize={'none'}
+                  />
+                </View>
+                <View style={styles.input}>
+                  <Jiro
+                    label={'price'}
+                    borderColor={'#9b537a'}
+                    inputStyle={{ color: 'white' }}
+                    value={price}
+                    keyboardType="numeric"
+                    onChangeText={value => this.onChangeText('price', value)}
+                    autoCapitalize={'none'}
+                  />
+                </View>
+              </View>
+            </KeyboardAvoidingView>
           </View>
 
-          <TouchableOpacity onPress={this.selectPhotoTapped}>
-            <View
-              style={{
-                padding: 20,
-                margin: 20,
-                backgroundColor: 'salmon',
-                width: '50%',
-                borderRadius: 5,
-                alignSelf: 'center'
-              }}
-            >
-              <Text style={{ textAlign: 'center', color: '#fff' }}>Select a Photo</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        <View>
-          <Button
-            title="Add Product"
-            color="#841584"
-            accessibilityLabel="Add Product"
+          <TouchableOpacity
             onPress={this.onSubmitPress}
             disabled={!isReady}
-          />
+            style={[styles.submitBtn, disabledBtn]}
+          >
+            <Text style={{ textAlign: 'center', color: '#fff' }}>Submit</Text>
+          </TouchableOpacity>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    justifyContent: 'space-around'
+  },
+  formWrapper: {},
+  submitWrapper: {},
+  inputsWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: '80%'
+  },
+  pictureWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  pic: {
+    width: 250,
+    height: 250,
+    borderRadius: 25
+  },
+  placeholder: {
+    width: 250,
+    height: 250,
+    borderRadius: 25,
+    backgroundColor: 'lightgrey',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  input: {
+    width: '100%'
+  },
+  submitBtn: {
+    padding: 20,
+    margin: 20,
+    backgroundColor: 'salmon',
+    width: '90%',
+    borderRadius: 10,
+    alignSelf: 'center',
+    shadowColor: 'red',
+    shadowOffset: {
+      width: 0,
+      height: 5
+    },
+    shadowRadius: 10,
+    shadowOpacity: 1
+  }
+});
 
 export default ProductForm;
